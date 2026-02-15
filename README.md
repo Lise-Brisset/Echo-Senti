@@ -68,3 +68,58 @@ Phase D : Restitution et Interface (Le "Déploiement")
 - Génération du prompt.
 
 - Génération des avis fictifs avec Mistral Nemo d'ollama. En utilisant la librairie LiteLLM de Python car elle est plus adaptée à une génération massive et rapide de données (Scripts de masse, tests rapides) que LangChain (Agents IA, RAG, Apps complexes). Mistral Nemo est assez légé (16 Go de RAM) et fluide en français, c'est l'un des meilleurs pour comprendre l'argot, les tournures de phrases locales et la ponctuation française.
+
+
+Notes diverses sur les LLMs : 
+
+Pour envisager utiliser le LLM le plus adapté à notre demande (génération d'avis), nous avons tester différents LLMs capable de générer du texte en français et aussi de tourner sur notre machine (24Go de RAM).
+
+| Modèle | Paramètres LiteLLM | Retour sur la génération de 50 avis |
+| :--- | :--- | :--- |
+| **Mistral** | `temp: 0.8`, `max_tokens: 200`, `stop: ["\n"]` | 12 minutes, Les avis générés sont assez redondants dans le vocabulaire utilisé et le message passé. Le paramètre stop permet d'arrêter le modèle s'il génère plusieurs avis et n'en avoir qu'un. |
+| **Mistral-Nemo (12B)** | `temp: 0.8`, `max_tokens: 200`, `stop: ["\n"]` | 20 minutes, Même remarque qu'avec le LLM Mistral sauf qu'il est plus lent probablement car il nécessite une plus grnade puissance de RAM pour tourner. |
+| **Phi3** | `temp: 0.8`, `max_tokens: 200`, `stop: ["\n"]` | 1min30, ne respecte pas bien la consigne de format. Beaucoup d'erreur de génération (ex : lignes vides) |
+| **Llama3.2** | `temp: 0.8`, `max_tokens: 200`| 16 minutes, Semble donner des résultats beaucoup plus naturels, il ne semble pas y avoir d'erreur d'accord que chez les modèles Mistral et Mistral-Nemo, le français est plus naturel. Sans paramètre stop le modèle génère beaucoup plus d'avis que demander, faudrait-il revoir le prompt pour l'obliger à ne générer qu'un unique avis. |
+
+
+**Après cette expérience à part, nous choisissons de prendre le LLM Llama3.2 qui a permis de générer de nombreux avis très variés, dans un français naturel et en un temps relativement correct.**
+
+
+Après de nombreux ajustement du prompt, voici celui qui génère le mieux ce que nous lui demandons et qui fait le moins d'erreur de format : 
+
+```
+RÔLE : Tu es un générateur de données de test pour une application d'analyse de sentiments.
+
+TÂCHE : Génère un seul avis client fictif pour une marque de chocolat imaginaire nommée "Chocotte". Cette marque fait tout type de chocolat : tablettes de chocolat, chocolat en poudre, biscuits et gâteaux au chocolat.
+
+CONSIGNES DE RÉDACTION :
+    Varie les sentiments : L'avis peut-être aléatoirement positif, neutre ou négatif.
+    Varie la longueur des commentaires : L'avis peut-être très court ("Super !"), ou détaillé expliquant la texture, le goût, la livraison ou tout autre avis spécifique à ces produits.
+    Utilise une date aléatoire répartie entre le 01/01/2024 et le 31/12/2025.
+
+CONTRAINTES STRICTES :
+1. Génère UN SEUL avis.
+2. NE METS PAS d'entête (pas de "date \t commentaire").
+3. NE FAIS AUCUNE introduction ("Voici l'avis...") ou conclusion.
+4. FORMAT : date[TAB]commentaire
+5. DATE : entre 01/01/2024 et 31/12/2025.
+
+RÉPONSE ATTENDUE (exemple) :
+25/12/2024\tLe chocolat noir est incroyable, je recommanderai !
+
+TA RÉPONSE :
+```
+
+Voici la réponse donnée avec ce prompt : 
+
+```
+22/02/2025	J'ai acheté des tablettes de chocolat au goût vanille pour mes enfants et j'ai été vraiment déçu par la qualité et la texture du chocolat. Cela ressemble à du papier mouillé plutôt qu'à du chocolat frais et cuit !
+24/02/2025	Moi j'ai acheté un gâteau au chocolat de Chocotte et c'était absolument délicieux ! Le chocolat était très fondu et le goût était parfaitement équilibré. Je me sens vraiment satisfait de ma décision d'acheter ce gâteau et je vais certainement en commander à nouveau !
+02/03/2025
+C'est une déception, j'attendais plus de créativité et de personnalisation dans ces biscuits. Le goût du chocolat était bon mais rien d'étonnant !
+20/04/2025	J'ai acheté les tablettes de chocolat au fromage pour mon anniversaire et j'en ai mangé 3 dans la journée ! La texture était parfaite, légèrement croustillante et pas trop tendre. Le goût est intense mais pas trop acide ou trop sucré, juste parfait ! J'ai été impressionné par la qualité du chocolat.
+10/04/2025
+J'ai acheté le délicieux gâteau au chocolat de Chocotte pour le mariage de ma fille et j'en ai été très satisfait ! La texture était légère mais savoureuse, et la quantité de chocolat ajoutée avait une saveur intense. Je l'ai servi aux invités avec succès.
+```
+
+Il reste des ajustements à faire tel que mettre une tabulation au lieu d'un retour à la ligne entre la date et l'avis. Ceci sera possible avec une Expression Regulière après la génération de l'ensemble des données. 
