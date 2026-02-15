@@ -65,6 +65,6 @@ Phase D : Restitution et Interface (Le "Déploiement")
 
 - J'ai généré une liste de 20 000 pseudonymes distincts les uns des autres.
 
-- Création du prompt avec l'aide de Gemini.
+- Génération du prompt.
 
 - Génération des avis fictifs avec Mistral Nemo d'ollama. En utilisant la librairie LiteLLM de Python car elle est plus adaptée à une génération massive et rapide de données (Scripts de masse, tests rapides) que LangChain (Agents IA, RAG, Apps complexes). Mistral Nemo est assez légé (16 Go de RAM) et fluide en français, c'est l'un des meilleurs pour comprendre l'argot, les tournures de phrases locales et la ponctuation française.
