@@ -55,8 +55,8 @@ def generer_avis(nombre_avis):
                 "role": "user"}],
                 api_base="http://localhost:11434",
                 # Quelques paramètres :
-                temperature=0.8, # Règle la créativité de la réponse. Plus la température est élevée, plus les réponses seront variées et créatives. Une température de 0.8 est un bon compromis pour générer des avis diversifiés.
-                max_tokens=200 # Limite la longueur de la réponse pour économiser de la puissance
+                temperature=0.9, # Règle la créativité de la réponse. Plus la température est élevée, plus les réponses seront variées et créatives. Une température de 0.8 est un bon compromis pour générer des avis diversifiés.
+                max_tokens=150 # Limite la longueur de la réponse pour économiser de la puissance
                 #stop=["\n"] # Arrête la génération après une ligne pour éviter d'avoir plusieurs avis dans une même réponse
                 )
             
