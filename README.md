@@ -123,3 +123,11 @@ J'ai acheté le délicieux gâteau au chocolat de Chocotte pour le mariage de ma
 ```
 
 Il reste des ajustements à faire tel que mettre une tabulation au lieu d'un retour à la ligne entre la date et l'avis. Ceci sera possible avec une Expression Regulière après la génération de l'ensemble des données. 
+
+
+
+##### Prochaines étapes :
+
+- Faire le nettoyage des données générées
+- Mettre en forme les données : Pseudo / Date / Avis
+- Peut être faire une petite analyse des différences entre les données 1 et 2 car les paramètres ont un peu changés. (Données générées 1 : 0.8 de température / 200 tokens max et Données générées 2 : 0.9 de température / 150 tokens max)
