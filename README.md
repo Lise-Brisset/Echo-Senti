@@ -131,3 +131,18 @@ Il reste des ajustements à faire tel que mettre une tabulation au lieu d'un ret
 - Faire le nettoyage des données générées
 - Mettre en forme les données : Pseudo / Date / Avis
 - Peut être faire une petite analyse des différences entre les données 1 et 2 car les paramètres ont un peu changés. (Données générées 1 : 0.8 de température / 200 tokens max et Données générées 2 : 0.9 de température / 150 tokens max)
+
+
+#### 1.2 Le nettoyage des données
+
+Voici le nettoyage appliqué aux données :
+
+- "(\d)\s*\n+(\w)" -> "\1\t\2" : retire le saut à la ligne entre la date et l'avis lorsqu'il y en a un et on le remplace par une tabulation
+
+- "^\s*\n+"  -> "" : pour supprimer les lignes vides
+
+- "(\d{2}/\d{2}/\d{4})[ +-](\w)" -> "\1\t\2" : pour corriger les mauvais formats (espaces ou tirets) et remplacer par une tabulation
+
+- "\n^ *([a-zA-Z])" -> " \1" : Pour corriger les avis rédigés sur plusieurs lignes et les mettre sur une ligne unique
+
+Quelques corrections manuelles ont été faites en supplément. Les 2 000 données nettoyées sont dans le fichier "final_reviews.txt".
